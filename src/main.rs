@@ -1,11 +1,10 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 extern crate dotenv;
 extern crate multipart;
-
 #[macro_use]
 extern crate rocket;
 extern crate rocket_contrib;
-
+extern crate rocket_cors;
 extern crate serde;
 
 use std::io::{BufRead, Cursor};
@@ -13,18 +12,15 @@ use std::str::from_utf8;
 use std::cell::RefCell;
 
 use dotenv::dotenv;
-
 use multipart::server::Multipart;
-
 use rocket_contrib::json::Json;
+use rocket_cors::{AllowedHeaders, AllowedOrigins, Error};
 use rocket::Data;
-use rocket::http::{ContentType, RawStr, Status};
+use rocket::http::{ContentType, Method, RawStr, Status};
 use rocket::response::status::Custom;
-
 use serde::Serialize;
 
 mod s3_interface;
-mod cors_hack;
 
 #[derive(Serialize)]
 struct S3Object {
@@ -172,12 +168,24 @@ fn upload_file(cont_type: &ContentType, data: Data) -> Result<Custom<String>, Cu
     );
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     dotenv().expect(".env file not found");
-    rocket::ignite().attach(
-        cors_hack::CORS()
-    ).mount(
-        "/", 
-        routes![get_bucket_contents, upload_file]
-    ).launch();
+
+    let allowed_origins = AllowedOrigins::some_exact(&["http://localhost:3000"]);
+
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        allowed_methods: vec![Method::Get, Method::Post].into_iter().map(From::from).collect(),
+        allowed_headers: AllowedHeaders::some(&["Content-Type", "Authorization", "Accept"]),
+        allow_credentials: true,
+        ..Default::default()
+    }
+    .to_cors()?;
+
+
+    rocket::ignite().attach(cors)
+                    .mount("/", routes![get_bucket_contents, upload_file])
+                    .launch();
+
+    Ok(())
 }
