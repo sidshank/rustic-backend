@@ -19,14 +19,65 @@ use rusoto_s3::{
     Tagging,
     PutObjectTaggingRequest
 };
+use serde::Serialize;
 
 #[path = "utils.rs"]
 mod utils;
 
+#[derive(Serialize)]
+pub struct S3Object {
+    file_name: String,
+    presigned_url: String,
+    tags: String,
+    e_tag: String, // AWS generated MD5 checksum hash for object
+    is_filtered: bool,
+}
+
+impl S3Object {
+    pub fn new(
+        file_name: String,
+        e_tag: String,
+        categories_string: String,
+        presigned_url: String,
+        is_filtered: bool,
+    ) -> S3Object {
+        S3Object {
+            file_name: file_name,
+            e_tag: e_tag,
+            tags: categories_string,
+            presigned_url: presigned_url,
+            is_filtered: is_filtered,
+        }
+    }
+
+    pub fn is_hidden(&self) -> bool {
+        self.is_filtered
+    }
+}
+
+#[derive(Serialize)]
+pub struct BucketContents {
+    data: Vec<S3Object>,
+}
+
+impl BucketContents {
+    pub fn new(contents: Vec<S3Object>) -> BucketContents {
+        BucketContents {
+            data: contents,
+        }
+    }
+
+    pub fn empty_bucket() -> BucketContents {
+        BucketContents {
+            data: Vec::new(),
+        }
+    }
+}
+
 pub struct S3FileManager {
     s3_client: S3Client,
     bucket_name: String,
-    access_key: String,
+    pub access_key: String,
     secret_key: String,
     region: Region,
 }
