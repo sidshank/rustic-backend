@@ -608,7 +608,7 @@ dependencies = [
  "time",
  "traitobject",
  "typeable",
- "unicase",
+ "unicase 1.4.2",
  "url",
 ]
 
@@ -838,7 +838,7 @@ dependencies = [
  "mime",
  "phf",
  "phf_codegen",
- "unicase",
+ "unicase 1.4.2",
 ]
 
 [[package]]
@@ -1188,7 +1188,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "234f71a15de2288bcb7e3b6515828d22af7ec8598ee6d24c3b526fa0a80b67a0"
 dependencies = [
  "siphasher",
- "unicase",
+ "unicase 1.4.2",
 ]
 
 [[package]]
@@ -1516,6 +1516,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "rocket_cors"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "270a960cba5a0b7928ad74268db7773ce932da6b550478383cefebe9f46c4e13"
+dependencies = [
+ "log 0.3.9",
+ "regex",
+ "rocket",
+ "serde",
+ "serde_derive",
+ "unicase 2.6.0",
+ "unicase_serde",
+ "url",
+]
+
+[[package]]
 name = "rocket_http"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1648,6 +1664,7 @@ dependencies = [
  "multipart",
  "rocket",
  "rocket_contrib",
+ "rocket_cors",
  "rusoto_core",
  "rusoto_s3",
  "serde",
@@ -2223,6 +2240,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f4765f83163b74f957c797ad9253caf97f103fb064d3999aea9568d09fc8a33"
 dependencies = [
  "version_check 0.1.5",
+]
+
+[[package]]
+name = "unicase"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "50f37be617794602aabbeee0be4f259dc1778fabe05e2d67ee8f79326d5cb4f6"
+dependencies = [
+ "version_check 0.9.1",
+]
+
+[[package]]
+name = "unicase_serde"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6ef53697679d874d69f3160af80bc28de12730a985d57bdf2b47456ccb8b11f1"
+dependencies = [
+ "serde",
+ "unicase 2.6.0",
 ]
 
 [[package]]

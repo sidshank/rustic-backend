@@ -10,6 +10,7 @@ edition = "2018"
 dotenv = "0.15.0"
 multipart = "0.16.1"
 rocket = "0.4.2"
+rocket_cors = "0.5.1"
 rusoto_core = "0.42.0"
 rusoto_s3 = "0.42.0"
 serde = {version="1.0.104", features=["derive"]}
